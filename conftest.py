@@ -1,5 +1,6 @@
 import pytest
-from helper import Generator, Courier, Order
+from helper import Generator
+from api_methods import Courier, Order
 import copy
 
 

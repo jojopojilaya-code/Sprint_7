@@ -1,7 +1,7 @@
 import allure
 import pytest
 from data import color_selection, TestMessages
-from helper import Order
+from api_methods import Order
 
 
 
@@ -14,7 +14,9 @@ class TestCreateOrder:
         random_order_data["color"] = color
         response = Order.create_order(random_order_data)
         assert response.status_code == TestMessages.ORDER_SUCCESSFUL_CREATION["code"]
-        assert TestMessages.ORDER_SUCCESSFUL_CREATION["message"] in response.json()
+        response_data = response.json()
+        assert "track" in response_data
+        assert isinstance(response_data["track"], str)
 
 
 class TestListOfOrders:
@@ -23,4 +25,8 @@ class TestListOfOrders:
     def test_get_list_of_orders_successful(self):
         response = Order.get_list_of_orders()
         assert response.status_code == TestMessages.ORDER_GET_LIST_OF_ORDERS["code"]
-        assert TestMessages.ORDER_GET_LIST_OF_ORDERS["message"] in response.json()
+        response_data = response.json()
+        assert "orders" in response_data
+        assert isinstance(response_data["orders"], list)
+        if response_data["orders"]:
+            assert isinstance(response_data["orders"][0], dict)

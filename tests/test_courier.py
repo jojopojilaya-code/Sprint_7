@@ -1,5 +1,5 @@
 import allure
-from helper import Courier
+from api_methods import Courier
 from data import TestMessages, EXCLUDE_PARAMETERS, CHANGE_PARAMETERS
 
 
@@ -56,7 +56,10 @@ class TestLoginCourier:
         Courier.register_courier(random_courier_data)
         response = Courier.login_courier(random_courier_data)
         assert response.status_code == TestMessages.COURIER_SUCCESSFUL_AUTHORIZATION["code"]
-        assert response.json()["id"] != TestMessages.COURIER_SUCCESSFUL_AUTHORIZATION["message"]
+        response_data = response.json()
+        assert "id" in response_data
+        assert isinstance(response_data["id"], int)
+        assert response_data["id"] > 0
 
 
     @allure.title('Авторизация курьера - json не содержит поля - логин')
